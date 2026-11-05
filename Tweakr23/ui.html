@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tweakr23</title>
+<style>
+:root{
+  --bg:#06080c; --panel:#0c1018; --panel2:#111723; --line:#1c2433; --line2:#273246;
+  --text:#d8e1ee; --dim:#7d8aa0; --faint:#4b566a;
+  --cy:#37e2ff; --cy2:#0aa7c9; --vi:#a77bff; --ok:#3dffa0; --warn:#ffc247; --bad:#ff4f7b;
+  --mono:"Cascadia Code","Cascadia Mono",Consolas,monospace;
+  --sans:"Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:14px/1.45 var(--sans)}
+body{display:grid;grid-template-columns:232px 1fr;grid-template-rows:56px 1fr;height:100vh;overflow:hidden}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:var(--line2);border-radius:6px;border:2px solid var(--bg)}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--cy)}
+
+/* header */
+header{grid-column:1/3;display:flex;align-items:center;gap:18px;padding:0 18px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#070b12,#0a0f19 60%,#0c0a18)}
+.logo{font:700 18px var(--mono);letter-spacing:.18em;display:flex;align-items:center;gap:10px}
+.logo i{width:26px;height:26px;border:2px solid var(--cy);transform:rotate(45deg);display:grid;place-items:center;box-shadow:0 0 14px #37e2ff55}
+.logo i::after{content:"";width:8px;height:8px;background:var(--vi);box-shadow:0 0 10px var(--vi)}
+.logo b{color:var(--cy)}
+.hmeter{margin-left:auto;display:flex;gap:18px;align-items:center;font:12px var(--mono);color:var(--dim)}
+.hmeter .bar{width:120px}
+.hbtn{background:transparent;border:1px solid var(--line2);border-radius:8px;padding:6px 12px;font-size:12.5px}
+.hbtn:hover{border-color:var(--cy);color:var(--cy)}
+
+/* nav */
+nav{border-right:1px solid var(--line);padding:12px 10px;overflow:auto;background:#080b11}
+nav .grp{font:11px var(--mono);color:var(--faint);letter-spacing:.14em;text-transform:uppercase;margin:14px 10px 6px}
+nav button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:none;border:0;border-radius:9px;padding:9px 11px;color:var(--dim)}
+nav button svg{width:17px;height:17px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav button:hover{background:var(--panel2);color:var(--text)}
+nav button.on{background:linear-gradient(90deg,#37e2ff1f,transparent);color:var(--cy);box-shadow:inset 2px 0 0 var(--cy)}
+
+main{overflow:auto;padding:26px 30px 120px}
+h1{font:600 24px var(--sans);margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:var(--dim);margin:0 0 22px;max-width:760px}
+h2{font:600 13px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:28px 0 10px}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.stat .k{font:11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.stat .v{font:600 24px var(--mono);margin:6px 0 8px}
+.stat .s{color:var(--dim);font-size:12.5px}
+
+.bar{height:6px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--cy2),var(--cy));border-radius:4px}
+.bar.hot>span{background:linear-gradient(90deg,#d17a00,var(--warn))}
+.bar.red>span{background:linear-gradient(90deg,#b0193f,var(--bad))}
+
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line2);border-radius:9px;padding:8px 14px;font-weight:550}
+.btn:hover{border-color:var(--cy)}
+.btn.pri{background:linear-gradient(135deg,#19c6ea,#7a5cff);border:0;color:#04060a}
+.btn.pri:hover{filter:brightness(1.12)}
+.btn.danger{border-color:#5a2232;color:#ff9db4}.btn.danger:hover{border-color:var(--bad)}
+.btn.sm{padding:5px 10px;font-size:12.5px;border-radius:7px}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spacer{flex:1}
+
+.hero{display:flex;gap:26px;align-items:center;padding:24px;background:radial-gradient(circle at 0% 0%,#37e2ff1c,transparent 55%),radial-gradient(circle at 100% 100%,#a77bff1a,transparent 50%),var(--panel)}
+.orb{width:108px;height:108px;flex:none;border-radius:50%;border:0;background:conic-gradient(from 200deg,var(--cy),var(--vi),var(--cy));padding:3px;box-shadow:0 0 30px #37e2ff40}
+.orb span{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:#070a10;font:700 15px var(--mono);letter-spacing:.1em;color:var(--cy)}
+.orb:hover{box-shadow:0 0 42px #37e2ff70}
+.orb.busy{animation:spin 1.2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+table{width:100%;border-collapse:collapse}
+th{font:11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel)}
+td{padding:10px;border-bottom:1px solid #141b27;vertical-align:top}
+tr:hover td{background:#0f1520}
+td .n{font-weight:600}
+td .m{color:var(--dim);font-size:12.5px;word-break:break-all}
+.mono{font-family:var(--mono);font-size:12.5px}
+.tbl{padding:0;overflow:hidden}
+
+.tag{display:inline-block;font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;border-radius:5px;padding:2px 7px;border:1px solid}
+.t-keep,.t-low,.t-ok{color:var(--ok);border-color:#1e6a49;background:#0d2a1f}
+.t-optional,.t-medium,.t-info{color:var(--warn);border-color:#6a5420;background:#2a210c}
+.t-disable,.t-high,.t-bad{color:var(--bad);border-color:#6a2236;background:#2a0d16}
+.t-dim{color:var(--dim);border-color:var(--line2);background:var(--panel2)}
+
+.sw{position:relative;display:inline-block;width:40px;height:22px;flex:none}
+.sw input{opacity:0;width:0;height:0}
+.sw span{position:absolute;inset:0;background:#202a3b;border-radius:22px;transition:.2s}
+.sw span::before{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;background:#7d8aa0;border-radius:50%;transition:.2s}
+.sw input:checked+span{background:#0a6f86}
+.sw input:checked+span::before{transform:translateX(18px);background:var(--cy);box-shadow:0 0 8px var(--cy)}
+input[type=checkbox].ck{width:16px;height:16px;accent-color:var(--cy)}
+
+.tog{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #141b27}
+.tog:last-child{border:0}
+.tog .t{font-weight:600}.tog .d{color:var(--dim);font-size:12.5px}
+
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:9px;overflow:hidden}
+.seg button{background:none;border:0;padding:6px 12px;color:var(--dim);font-size:12.5px}
+.seg button.on{background:var(--panel2);color:var(--cy)}
+
+.empty{padding:34px;text-align:center;color:var(--dim)}
+.load{display:flex;gap:12px;align-items:center;color:var(--dim);padding:30px}
+.load::before{content:"";width:18px;height:18px;border:2px solid var(--line2);border-top-color:var(--cy);border-radius:50%;animation:spin .8s linear infinite}
+.note{border-left:2px solid var(--vi);background:#130f22;padding:12px 14px;border-radius:0 10px 10px 0;color:#c9bff0;font-size:13px}
+.note.warn{border-color:var(--warn);background:#1d170a;color:#f2dca6}
+.result{margin-top:14px;font:12.5px/1.7 var(--mono);color:var(--ok);white-space:pre-wrap}
+.act h3{margin:0 0 4px;font-size:15px}.act p{margin:0 0 14px;color:var(--dim);font-size:12.5px;min-height:36px}
+.big{font:600 30px var(--mono);color:var(--cy)}
+
+/* console */
+#log{position:fixed;right:18px;bottom:18px;width:420px;max-height:220px;overflow:auto;background:#05070bee;border:1px solid var(--line2);border-radius:12px;font:12px/1.6 var(--mono);padding:10px 12px;display:none;backdrop-filter:blur(6px);box-shadow:0 10px 30px #0008}
+#log.show{display:block}
+#log div{color:var(--dim)}#log .ok{color:var(--ok)}#log .err{color:var(--bad)}
+#log .x{position:sticky;top:0;float:right;background:none;border:0;color:var(--faint)}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><i></i>TWEAK<b>R23</b></div>
+  <div class="hmeter">
+    <span>RAM</span><div class="bar" id="hram"><span style="width:0"></span></div><span id="hramt">--</span>
+  </div>
+  <button class="hbtn" onclick="sysAct('restorepoint',this)" title="Snapshot Windows so you can roll back any change">◆ Restore point</button>
+  <button class="hbtn" onclick="quit()">Quit</button>
+</header>
+
+<nav id="nav"></nav>
+<main id="main"></main>
+<div id="log"><button class="x" onclick="logBox.classList.remove('show')">✕</button></div>
+
+<script>
+const TOKEN = '__TOKEN__';
+const $ = s => document.querySelector(s);
+const main = $('#main'), logBox = $('#log');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const size = b => { b = +b || 0; const u = ['B','KB','MB','GB','TB']; let i = 0; while (b >= 1024 && i < 4) { b /= 1024; i++ } return (i ? b.toFixed(i > 2 ? 2 : 1) : b) + ' ' + u[i]; };
+const arr = x => x == null ? [] : Array.isArray(x) ? x : [x];
+
+async function api(path, body) {
+  const r = await fetch(path, { method: body ? 'POST' : 'GET', headers: { 'X-Token': TOKEN, 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+  let j; try { j = await r.json(); } catch { throw new Error('Engine did not answer (is the black window still open?)'); }
+  if (!r.ok || (j && j.error)) throw new Error(j.error || ('HTTP ' + r.status));
+  return j;
+}
+function log(msg, cls = '') { const d = document.createElement('div'); d.className = cls; d.textContent = '› ' + msg; logBox.appendChild(d); logBox.classList.add('show'); logBox.scrollTop = 1e9; }
+async function run(btn, fn) {
+  const old = btn && btn.innerHTML; if (btn) { btn.disabled = true; btn.innerHTML = 'Working…'; }
+  try { return await fn(); } catch (e) { log(e.message, 'err'); } finally { if (btn) { btn.disabled = false; btn.innerHTML = old; } }
+}
+const loading = t => `<div class="load">${esc(t)}</div>`;
+const tag = (t, c) => `<span class="tag t-${c}">${esc(t)}</span>`;
+const sw = (on, attrs) => `<label class="sw"><input type="checkbox" ${on ? 'checked' : ''} ${attrs}><span></span></label>`;
+
+/* ------------ nav ------------ */
+const I = {
+  dash:'<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
+  startup:'<path d="M12 2v10"/><path d="M5.6 6.6a8 8 0 1 0 12.8 0"/>',
+  turbo:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  junk:'<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 14h10l1-14"/>',
+  privacy:'<path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/>',
+  ext:'<path d="M10 3h4v3a2 2 0 1 0 4 0V3h3v7h-3a2 2 0 1 0 0 4h3v7h-7v-3a2 2 0 1 0-4 0v3H3v-7h3a2 2 0 1 0 0-4H3V3z"/>',
+  shortcut:'<path d="M10 14 21 3"/><path d="M15 3h6v6"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/>',
+  drivers:'<rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/>',
+  health:'<path d="M3 12h4l3-8 4 16 3-8h4"/>',
+  disk:'<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+  system:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>'
+};
+const NAV = [
+  ['', [['dash','Dashboard','dash']]],
+  ['Speed', [['startup','Startup Optimizer','startup'],['turbo','Turbo Boost','turbo'],['system','System Optimization','system']]],
+  ['Clean', [['junk','Junk File Clean','junk'],['privacy','Privacy Sweep','privacy'],['ext','Browser Extensions','ext'],['shortcuts','Shortcut Fix','shortcut']]],
+  ['Hardware', [['drivers','Drivers & GPU','drivers'],['health','Hardware Health','health'],['disk','Disk Check','disk']]]
+];
+$('#nav').innerHTML = NAV.map(([g, items]) => (g ? `<div class="grp">${g}</div>` : '') + items.map(([id, label, ic]) =>
+  `<button data-v="${id}" onclick="go('${id}')"><svg viewBox="0 0 24 24">${I[ic]}</svg>${label}</button>`).join('')).join('');
+function go(v) {
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  main.scrollTop = 0; (VIEWS[v] || VIEWS.dash)();
+}
+
+/* ------------ views ------------ */
+const VIEWS = {};
+
+VIEWS.dash = async () => {
+  main.innerHTML = `<h1>Dashboard</h1><p class="sub">One click cleans the safe stuff. Everything else is in the sections on the left, where you decide what changes.</p>
+  <div class="card hero"><button class="orb" id="qf" onclick="quickFix()"><span>QUICK FIX</span></button>
+  <div><div style="font-size:17px;font-weight:600;margin-bottom:6px">Clean up the safe stuff</div>
+  <div class="sub" style="margin:0">Deletes temp files, update leftovers, crash dumps and browser caches (closed browsers only), flushes DNS, and counts broken shortcuts and startup apps worth turning off. Nothing personal is deleted.</div>
+  <div class="result" id="qfr"></div></div></div>
+  <h2>This PC</h2><div class="grid g4" id="stats">${loading('Reading system…')}</div>`;
+  try {
+    const d = await api('/api/dashboard');
+    const memUsed = d.mem.total - d.mem.free, memPct = memUsed / d.mem.total * 100;
+    const dPct = (d.diskSize - d.diskFree) / d.diskSize * 100;
+    $('#stats').innerHTML = `
+      <div class="card stat"><div class="k">Memory</div><div class="v">${Math.round(memPct)}%</div><div class="bar ${memPct > 85 ? 'red' : memPct > 70 ? 'hot' : ''}"><span style="width:${memPct}%"></span></div><div class="s" style="margin-top:8px">${size(memUsed)} of ${size(d.mem.total)} in use</div></div>
+      <div class="card stat"><div class="k">System drive</div><div class="v">${size(d.diskFree)}</div><div class="bar ${dPct > 90 ? 'red' : dPct > 80 ? 'hot' : ''}"><span style="width:${dPct}%"></span></div><div class="s" style="margin-top:8px">free of ${size(d.diskSize)}</div></div>
+      <div class="card stat"><div class="k">Startup apps</div><div class="v">${d.startupOn}</div><div class="s">${d.startupSuggest ? `<a href="#" onclick="go('startup');return false">${d.startupSuggest} worth turning off →</a>` : 'Looking lean'}</div></div>
+      <div class="card stat"><div class="k">Uptime</div><div class="v">${d.uptimeHours < 48 ? d.uptimeHours + 'h' : Math.round(d.uptimeHours / 24) + 'd'}</div><div class="s">${d.uptimeHours > 168 ? 'A restart would clear a lot of clutter' : 'Since last restart'}</div></div>
+      <div class="card stat"><div class="k">Devices</div><div class="v" style="color:${d.problemDevices ? 'var(--bad)' : 'var(--ok)'}">${d.problemDevices ? d.problemDevices + ' issue' + (d.problemDevices > 1 ? 's' : '') : 'OK'}</div><div class="s">${d.problemDevices ? `<a href="#" onclick="go('drivers');return false">See which →</a>` : 'No driver problems reported'}</div></div>
+      <div class="card stat"><div class="k">Windows</div><div class="v" style="font-size:15px">${esc(d.os.replace('Microsoft ', ''))}</div><div class="s">Build ${esc(d.build)} · ${esc(d.pc)} · ${esc(d.power)}</div></div>`;
+  } catch (e) { $('#stats').innerHTML = `<div class="note warn">${esc(e.message)}</div>`; }
+};
+async function quickFix() {
+  const o = $('#qf'); if (o.classList.contains('busy')) return;
+  o.classList.add('busy'); $('#qfr').textContent = '';
+  try { const r = await api('/api/quickfix', {}); $('#qfr').textContent = `Freed ${size(r.freed)}\n` + arr(r.report).join('\n'); log('Quick Fix done: freed ' + size(r.freed), 'ok'); refreshRam(); }
+  catch (e) { log(e.message, 'err'); } finally { o.classList.remove('busy'); }
+}
+
+/* startup */
+let ST = [], stFilter = 'all';
+VIEWS.startup = async () => {
+  main.innerHTML = `<h1>Startup Optimizer</h1><p class="sub">Everything that launches when you sign in, including the scheduled tasks updaters like to hide in. Switching one off only stops it auto-starting — the app still works when you open it, and you can switch it back on any time.</p>
+  <div class="row" style="margin-bottom:14px"><div class="seg" id="stseg"><button data-f="all">All</button><button data-f="disable">Recommended off</button><button data-f="on">Currently on</button></div>
+  <div class="spacer"></div><button class="btn pri" id="stapply" onclick="applyStartup(this)">Turn off all recommended</button></div>
+  <div class="card tbl" id="sttbl">${loading('Reading startup entries…')}</div>`;
+  document.querySelectorAll('#stseg button').forEach(b => b.onclick = () => { stFilter = b.dataset.f; drawStartup(); });
+  try { ST = arr((await api('/api/startup')).items); drawStartup(); } catch (e) { $('#sttbl').innerHTML = `<div class="empty">${esc(e.message)}</div>`; }
+};
+function drawStartup() {
+  document.querySelectorAll('#stseg button').forEach(b => b.classList.toggle('on', b.dataset.f === stFilter));
+  const order = { disable: 0, optional: 1, keep: 2 };
+  let rows = ST.map((x, i) => ({ ...x, i })).sort((a, b) => order[a.verdict] - order[b.verdict] || a.name.localeCompare(b.name));
+  if (stFilter === 'disable') rows = rows.filter(x => x.verdict === 'disable');
+  if (stFilter === 'on') rows = rows.filter(x => x.enabled);
+  const lbl = { keep: 'Keep', optional: 'Your call', disable: 'Turn off' };
+  $('#sttbl').innerHTML = rows.length ? `<table><tr><th style="width:60px">On</th><th>App</th><th>Advice</th><th style="width:170px">Where</th></tr>${rows.map(x => `
+    <tr><td>${sw(x.enabled, `onchange="setStartup(${x.i},this)"`)}</td>
+    <td><div class="n">${esc(x.name)}</div><div class="m">${esc(x.publisher || '')}${x.publisher ? ' · ' : ''}<span class="mono">${esc(x.command).slice(0, 160)}</span></div></td>
+    <td>${tag(lbl[x.verdict], x.verdict)}<div class="m" style="margin-top:5px">${esc(x.why)}</div></td>
+    <td class="m">${esc(x.sourceLabel)}</td></tr>`).join('')}</table>` : `<div class="empty">Nothing here.</div>`;
+}
+async function setStartup(i, el) {
+  const x = ST[i];
+  try { await api('/api/startup/set', { source: x.source, name: x.name, taskPath: x.taskPath, enable: el.checked }); x.enabled = el.checked; log(`${x.name}: ${el.checked ? 'will start with Windows' : 'turned off at startup'}`, 'ok'); }
+  catch (e) { el.checked = !el.checked; log(e.message, 'err'); }
+}
+async function applyStartup(btn) {
+  const t = ST.filter(x => x.enabled && x.verdict === 'disable');
+  if (!t.length) return log('Nothing left to turn off.');
+  if (!confirm(`Turn off ${t.length} startup app(s)?\n\n${t.map(x => '• ' + x.name).join('\n')}`)) return;
+  await run(btn, async () => { for (const x of t) { try { await api('/api/startup/set', { source: x.source, name: x.name, taskPath: x.taskPath, enable: false }); x.enabled = false; } catch (e) { log(x.name + ': ' + e.message, 'err'); } } log(`Turned off ${t.length} startup app(s). Takes effect next sign-in.`, 'ok'); drawStartup(); });
+}
+
+/* turbo */
+let TB = [];
+VIEWS.turbo = async () => {
+  main.innerHTML = `<h1>Turbo Boost</h1><p class="sub">Close background apps to free memory right now — handy before editing, rendering or gaming. Windows itself is never touched. Apps with an open window are asked to close politely, so you still get any "save changes?" prompt.</p>
+  <div class="card" style="margin-bottom:14px"><div class="row"><div><div class="k mono" style="color:var(--faint);font-size:11px;letter-spacing:.12em">FREE MEMORY</div><div class="big" id="tbfree">--</div></div>
+  <div style="flex:1;max-width:360px"><div class="bar" id="tbbar"><span style="width:0"></span></div></div><div class="spacer"></div>
+  <button class="btn" onclick="selSuggested()">Select suggested</button><button class="btn pri" onclick="boost(this)">⚡ Boost selected</button></div></div>
+  <div class="card tbl" id="tbtbl">${loading('Reading running apps…')}</div><div class="result" id="tbr"></div>`;
+  loadTurbo();
+};
+async function loadTurbo() {
+  try {
+    const r = await api('/api/turbo'); TB = arr(r.items); drawMem(r.mem);
+    $('#tbtbl').innerHTML = `<table><tr><th style="width:40px"></th><th>App</th><th style="width:110px">Memory</th><th style="width:220px">Note</th></tr>${TB.map((x, i) => `
+      <tr><td><input type="checkbox" class="ck" data-i="${i}" ${x.suggested ? 'checked' : ''}></td>
+      <td><div class="n">${esc(x.desc || x.name)}</div><div class="m">${esc(x.name)}.exe${x.count > 1 ? ` · ${x.count} processes` : ''}</div></td>
+      <td class="mono">${size(x.memory)}</td>
+      <td>${x.browser ? tag('Browser — tabs may close', 'optional') : x.hasWindow ? tag('Open window', 'dim') : x.suggested ? tag('Safe to stop', 'keep') : tag('Background', 'dim')}</td></tr>`).join('')}</table>`;
+  } catch (e) { $('#tbtbl').innerHTML = `<div class="empty">${esc(e.message)}</div>`; }
+}
+function drawMem(m) { const pct = (m.total - m.free) / m.total * 100; $('#tbfree').textContent = size(m.free); $('#tbbar').className = 'bar ' + (pct > 85 ? 'red' : pct > 70 ? 'hot' : ''); $('#tbbar span').style.width = pct + '%'; }
+function selSuggested() { document.querySelectorAll('#tbtbl .ck').forEach(c => c.checked = !!TB[c.dataset.i].suggested); }
+async function boost(btn) {
+  const names = [...document.querySelectorAll('#tbtbl .ck:checked')].map(c => TB[c.dataset.i].name);
+  if (!names.length) return log('Select at least one app.');
+  await run(btn, async () => { const r = await api('/api/turbo/boost', { names }); $('#tbr').textContent = `Freed ~${size(r.freed)}\n` + arr(r.report).join('\n'); log('Turbo Boost freed ~' + size(r.freed), 'ok'); refreshRam(); await loadTurbo(); });
+}
+
+/* junk */
+let JK = [];
+VIEWS.junk = async () => {
+  main.innerHTML = `<h1>Junk File Clean</h1><p class="sub">Scans the places Windows and apps leave clutter. Safe items are pre-checked; the rest rebuild themselves but have a small trade-off, explained on each row. Close your browsers first to include their caches.</p>
+  <div class="row" style="margin-bottom:14px"><button class="btn" onclick="VIEWS.junk()">↻ Rescan</button><div class="spacer"></div><span class="mono" id="jktot" style="color:var(--dim)"></span><button class="btn pri" id="jkgo" onclick="cleanJunk(this)">Clean selected</button></div>
+  <div class="card tbl" id="jktbl">${loading('Measuring junk… this can take a moment')}</div><div class="result" id="jkr"></div>`;
+  try { JK = arr((await api('/api/junk/scan')).items); drawJunk(); } catch (e) { $('#jktbl').innerHTML = `<div class="empty">${esc(e.message)}</div>`; }
+};
+function drawJunk() {
+  $('#jktbl').innerHTML = `<table><tr><th style="width:40px"></th><th>What</th><th style="width:120px">Size</th></tr>${JK.map((x, i) => `
+    <tr><td><input type="checkbox" class="ck" data-i="${i}" ${x.safe && x.size > 0 ? 'checked' : ''} ${x.size > 0 ? '' : 'disabled'} onchange="jkTotal()"></td>
+    <td><div class="n">${esc(x.label)} ${x.safe ? '' : tag('check first', 'optional')}</div><div class="m">${esc(x.desc)}</div></td>
+    <td class="mono">${x.size > 0 ? size(x.size) : '<span style="color:var(--faint)">clean</span>'}</td></tr>`).join('')}</table>`;
+  jkTotal();
+}
+function jkTotal() { const t = [...document.querySelectorAll('#jktbl .ck:checked')].reduce((s, c) => s + JK[c.dataset.i].size, 0); $('#jktot').textContent = 'Selected: ' + size(t); }
+async function cleanJunk(btn) {
+  const ids = [...document.querySelectorAll('#jktbl .ck:checked')].map(c => JK[c.dataset.i].id);
+  if (!ids.length) return log('Nothing selected.');
+  if (ids.includes('recycle') && !confirm('This permanently empties your Recycle Bin. Continue?')) return;
+  await run(btn, async () => { const r = await api('/api/junk/clean', { ids }); $('#jkr').textContent = `Freed ${size(r.freed)}\n` + arr(r.report).join('\n'); log('Junk clean freed ' + size(r.freed), 'ok'); });
+}
+
+/* privacy */
+const SWEEP = [
+  ['recent', 'Recent files list', 'The "Recent" list in Explorer and Start.', true],
+  ['runmru', 'Run dialog history', 'Commands typed into Win+R.', true],
+  ['typed', 'Explorer address bar history', 'Paths typed into File Explorer.', true],
+  ['search', 'Explorer search history', 'Past searches in File Explorer.', true],
+  ['clipboard', 'Clipboard', 'Whatever is currently copied.', true],
+  ['dns', 'DNS cache', 'The list of websites your PC looked up recently.', true],
+  ['jumplists', 'Jump lists', 'Recent items in taskbar right-click menus. Also clears items you pinned there.', false],
+  ['history', 'Browser history (Chrome, Edge, Brave…)', 'Closed browsers only. Bookmarks and passwords are kept.', false],
+  ['cookies', 'Browser cookies', 'Signs you out of every website. Closed browsers only.', false]
+];
+VIEWS.privacy = async () => {
+  main.innerHTML = `<h1>Privacy Sweep</h1><p class="sub">Two parts: wipe the traces Windows keeps of what you've done, and switch off the settings that send data or show ads.</p>
+  <div class="grid" style="grid-template-columns:1fr 1fr;align-items:start">
+  <div class="card"><h2 style="margin-top:0">Sweep traces</h2>${SWEEP.map(([id, t, d, on]) => `<div class="tog"><input type="checkbox" class="ck pv" value="${id}" ${on ? 'checked' : ''} style="margin-top:3px"><div><div class="t">${t}</div><div class="d">${d}</div></div></div>`).join('')}
+  <button class="btn pri" style="margin-top:12px" onclick="sweep(this)">Run privacy sweep</button><div class="result" id="pvr"></div></div>
+  <div class="card"><h2 style="margin-top:0">Privacy settings</h2><div id="pvt">${loading('Reading settings…')}</div></div></div>`;
+  try { drawToggles('#pvt', arr((await api('/api/privacy')).toggles)); } catch (e) { $('#pvt').innerHTML = esc(e.message); }
+};
+async function sweep(btn) {
+  const ids = [...document.querySelectorAll('.pv:checked')].map(c => c.value);
+  if (ids.includes('cookies') && !confirm('Clearing cookies signs you out of every website in those browsers. Continue?')) return;
+  await run(btn, async () => { const r = await api('/api/privacy/sweep', { ids }); $('#pvr').textContent = arr(r.report).join('\n'); log('Privacy sweep done', 'ok'); });
+}
+function drawToggles(sel, list) {
+  $(sel).innerHTML = list.map(t => `<div class="tog">${sw(t.on, `onchange="flip('${t.id}',this)"`)}<div><div class="t">${esc(t.label)}</div><div class="d">${esc(t.desc)}${t.explorer ? ' <span style="color:var(--faint)">(Explorer reloads)</span>' : ''}</div></div></div>`).join('');
+}
+async function flip(id, el) {
+  try { const r = await api('/api/toggle', { id, on: el.checked }); log(r.message, 'ok'); } catch (e) { el.checked = !el.checked; log(e.message, 'err'); }
+}
+
+/* extensions */
+let EX = [];
+VIEWS.ext = async () => {
+  main.innerHTML = `<h1>Browser Extensions</h1><p class="sub">Every extension in Chrome, Edge, Brave, Vivaldi, Opera and Firefox, with a risk score based on what it's allowed to touch. "Remove" opens the browser's own extension page (the clean way). "Force remove" deletes it from disk — use it for stubborn ones, especially anything marked <b>Forced by policy</b>, which is how adware locks itself in.</p>
+  <div id="extw">${loading('Reading browser profiles…')}</div>`;
+  try {
+    const g = arr((await api('/api/extensions')).groups); EX = [];
+    if (!g.length) return $('#extw').innerHTML = '<div class="card empty">No supported browsers found.</div>';
+    $('#extw').innerHTML = g.map(b => {
+      const items = arr(b.items).sort((a, c) => ({ high: 0, medium: 1, low: 2 })[a.risk] - ({ high: 0, medium: 1, low: 2 })[c.risk]);
+      return `<h2>${esc(b.browser)} <span style="color:var(--faint)">· ${items.length}</span> ${b.running ? tag('open — close it to force remove', 'optional') : ''}</h2>
+      <div class="card tbl">${items.length ? `<table>${items.map(x => { const i = EX.push({ ...x, browser: b.browser }) - 1; return `
+        <tr><td><div class="n">${esc(x.name || x.id)} <span class="m">v${esc(x.version)}</span></div>
+        <div class="m">${x.perms ? 'Can access: ' + esc(x.perms) : 'Minimal permissions'}${x.profile && x.profile !== 'Default' ? ' · profile ' + esc(x.profile) : ''}</div></td>
+        <td style="width:250px">${tag(x.risk + ' risk', x.risk)} ${x.policy ? tag('Forced by policy', 'bad') : ''} ${x.sideloaded ? tag('Not from store', 'optional') : ''} ${x.active === false ? tag('disabled', 'dim') : ''}</td>
+        <td style="width:210px;text-align:right"><button class="btn sm" onclick="extOpen(${i})">Remove…</button> <button class="btn sm danger" onclick="extKill(${i},this)" ${b.running ? 'disabled' : ''}>Force remove</button></td></tr>`; }).join('')}</table>` : '<div class="empty">No extensions.</div>'}</div>`;
+    }).join('');
+  } catch (e) { $('#extw').innerHTML = `<div class="note warn">${esc(e.message)}</div>`; }
+};
+async function extOpen(i) { try { await api('/api/extensions/open', { browser: EX[i].browser, id: EX[i].id }); log(`Opened ${EX[i].browser}'s extension page`, 'ok'); } catch (e) { log(e.message, 'err'); } }
+async function extKill(i, btn) {
+  const x = EX[i]; if (!confirm(`Force remove "${x.name}" from ${x.browser}?`)) return;
+  await run(btn, async () => { const r = await api('/api/extensions/remove', x); log(r.message, 'ok'); VIEWS.ext(); });
+}
+
+/* shortcuts */
+let SC = [];
+VIEWS.shortcuts = async () => {
+  main.innerHTML = `<h1>Shortcut Fix</h1><p class="sub">Finds shortcuts on your desktop, Start menu and taskbar that point at apps or files that no longer exist. Removed shortcuts go to the Recycle Bin, so nothing is lost if one was only pointing at an unplugged drive.</p>
+  <div class="row" style="margin-bottom:14px"><button class="btn" onclick="VIEWS.shortcuts()">↻ Rescan</button><div class="spacer"></div><button class="btn pri" onclick="fixSc(this)">Move selected to Recycle Bin</button></div>
+  <div class="card tbl" id="sctbl">${loading('Checking shortcuts…')}</div>`;
+  try {
+    SC = arr((await api('/api/shortcuts')).items);
+    $('#sctbl').innerHTML = SC.length ? `<table><tr><th style="width:40px"></th><th>Shortcut</th><th>Pointed at</th><th style="width:150px">Why</th></tr>${SC.map((x, i) => `
+      <tr><td><input type="checkbox" class="ck" data-i="${i}" ${x.why === 'target missing' ? 'checked' : ''}></td><td><div class="n">${esc(x.name)}</div><div class="m">${esc(x.where)}</div></td>
+      <td class="m mono">${esc(x.target)}</td><td>${tag(x.why, x.why === 'target missing' ? 'disable' : 'optional')}</td></tr>`).join('')}</table>` : `<div class="empty">✓ No broken shortcuts.</div>`;
+  } catch (e) { $('#sctbl').innerHTML = `<div class="empty">${esc(e.message)}</div>`; }
+};
+async function fixSc(btn) {
+  const paths = [...document.querySelectorAll('#sctbl .ck:checked')].map(c => SC[c.dataset.i].path);
+  if (!paths.length) return log('Nothing selected.');
+  await run(btn, async () => { const r = await api('/api/shortcuts/remove', { paths }); log(r.message, 'ok'); VIEWS.shortcuts(); });
+}
+
+/* drivers */
+let DR = null, drShowMs = false;
+VIEWS.drivers = async () => {
+  main.innerHTML = `<h1>Drivers &amp; GPU</h1><p class="sub">Shows devices with problems, the age of every third-party driver, and can ask Windows Update directly which driver updates it has for this PC. Installs happen through Windows Update so you only get signed drivers made for your hardware.</p>
+  <div class="grid g3" id="drtop">${loading('Reading drivers…')}</div>
+  <h2>Windows Update driver check</h2><div class="card"><div class="row"><div class="sub" style="margin:0;flex:1">Asks Windows Update for driver updates available for this PC. Takes up to a minute.</div>
+  <button class="btn pri" onclick="wuCheck(this)">Check for driver updates</button><button class="btn" onclick="sysAct('wu-drivers',this)">Open Optional updates</button></div><div id="wur"></div></div>
+  <div class="row" style="margin:28px 0 10px"><h2 style="margin:0">Installed drivers</h2><div class="spacer"></div><label class="row" style="gap:8px;color:var(--dim);font-size:12.5px"><input type="checkbox" class="ck" onchange="drShowMs=this.checked;drawDrivers()"> Show Windows built-in</label><button class="btn sm" onclick="sysAct('devmgr',this)">Device Manager</button></div>
+  <div class="card tbl" id="drtbl"></div>`;
+  try { DR = await api('/api/drivers'); drawDriverTop(); drawDrivers(); } catch (e) { $('#drtop').innerHTML = `<div class="note warn">${esc(e.message)}</div>`; }
+};
+const VENDOR = [[/nvidia/i, 'https://www.nvidia.com/en-us/drivers/', 'NVIDIA drivers'], [/amd|radeon/i, 'https://www.amd.com/en/support/download/drivers.html', 'AMD drivers'], [/intel/i, 'https://www.intel.com/content/www/us/en/support/detect.html', 'Intel Driver Assistant']];
+function drawDriverTop() {
+  const p = arr(DR.problems), g = arr(DR.gpus), h = arr(DR.hags)[0];
+  $('#drtop').innerHTML = `
+    <div class="card"><h2 style="margin-top:0">Problem devices</h2>${p.length ? p.map(x => `<div style="margin-bottom:10px"><div class="n">${esc(x.device)}</div><div class="m">${tag('Code ' + x.code, 'bad')} ${esc(x.problem)}</div></div>`).join('') : `<div style="color:var(--ok)">✓ Every device is working.</div>`}</div>
+    <div class="card"><h2 style="margin-top:0">Graphics</h2>${g.map(x => { const v = VENDOR.find(v => v[0].test(x.name)); return `<div style="margin-bottom:10px"><div class="n">${esc(x.name)}</div><div class="m">Driver ${esc(x.version)} · ${esc(x.date)}</div>${v ? `<button class="btn sm" style="margin-top:6px" onclick="openUrl('${v[1]}')">${v[2]} ↗</button>` : ''}</div>`; }).join('')}</div>
+    <div class="card"><h2 style="margin-top:0">Hardware acceleration</h2>${h ? `<div class="tog" style="border:0;padding:0">${sw(h.on, `onchange="flip('${h.id}',this)"`)}<div><div class="t">${esc(h.label)}</div><div class="d">${esc(h.desc)}</div></div></div>` : ''}
+    <div class="note" style="margin-top:12px">Browser and app hardware acceleration are separate switches inside each app (e.g. Chrome Settings › System). Keep those on unless an app glitches.</div></div>`;
+}
+function drawDrivers() {
+  const list = arr(DR.drivers).filter(d => drShowMs || !d.inbox);
+  $('#drtbl').innerHTML = `<table><tr><th>Device</th><th style="width:180px">Provider</th><th style="width:150px">Version</th><th style="width:150px">Date</th></tr>${list.map(d => {
+    const a = d.age, flag = d.inbox ? tag('built-in', 'dim') : a > 5 ? tag(a + ' yrs', 'disable') : a > 3 ? tag(a + ' yrs', 'optional') : '';
+    return `<tr><td><div class="n">${esc(d.device)}</div><div class="m">${esc(d.cls)}</div></td><td class="m">${esc(d.provider)}</td><td class="mono">${esc(d.version)}</td><td class="mono">${esc(d.date)} ${flag}</td></tr>`; }).join('')}</table>
+    <div class="m" style="padding:12px">Age alone doesn't mean a driver is bad — chipset and USB drivers often stay unchanged for years. Use the Windows Update check above, or your PC maker's support page, to see if a newer one exists.</div>`;
+}
+async function wuCheck(btn) {
+  $('#wur').innerHTML = loading('Asking Windows Update…');
+  await run(btn, async () => {
+    const r = arr((await api('/api/drivers/wu')).items);
+    $('#wur').innerHTML = r.length ? `<table style="margin-top:12px"><tr><th>Update</th><th>Class</th><th>Date</th></tr>${r.map(u => `<tr><td><div class="n">${esc(u.title)}</div><div class="m">${esc(u.provider)}</div></td><td class="m">${esc(u.cls)}</td><td class="mono">${esc(u.date)}</td></tr>`).join('')}</table><div class="note" style="margin-top:12px">Install them from <b>Open Optional updates</b>.</div>` : `<div class="result">✓ Windows Update has no newer drivers for this PC.</div>`;
+    log(`Driver check: ${r.length} update(s) available`, 'ok');
+  });
+  if ($('#wur').querySelector('.load')) $('#wur').innerHTML = '';
+}
+
+/* health */
+VIEWS.health = async () => {
+  main.innerHTML = `<h1>Hardware Health</h1><p class="sub">Drive health and wear, battery capacity, memory, and how often Windows has logged errors or crashed lately.</p><div id="hw">${loading('Reading sensors…')}</div>`;
+  try {
+    const h = await api('/api/health'), disks = arr(h.disks), mods = arr(h.modules), top = arr(h.topErrors), temps = arr(h.temps);
+    const memPct = (h.mem.total - h.mem.free) / h.mem.total * 100;
+    $('#hw').innerHTML = `
+    <div class="grid g4">
+      <div class="card stat"><div class="k">Processor</div><div class="v" style="font-size:15px">${esc(h.cpu.name)}</div><div class="s">${h.cpu.cores} cores / ${h.cpu.threads} threads · ${h.cpu.load ?? '–'}% load${temps.length ? ' · ' + temps.map(t => t + '°C').join(', ') : ''}</div></div>
+      <div class="card stat"><div class="k">Memory</div><div class="v">${size(h.mem.total)}</div><div class="bar"><span style="width:${memPct}%"></span></div><div class="s" style="margin-top:8px">${mods.map(m => `${size(m.size)}${m.speed ? ' @ ' + m.speed + ' MT/s' : ''}`).join(' + ')}</div></div>
+      <div class="card stat"><div class="k">Graphics</div><div class="v" style="font-size:15px">${arr(h.gpus).map(esc).join('<br>')}</div></div>
+      <div class="card stat"><div class="k">Stability (30 days)</div><div class="v" style="color:${h.bluescreens30d || h.unexpectedShutdowns30d > 2 ? 'var(--warn)' : 'var(--ok)'}">${h.bluescreens30d ? h.bluescreens30d + ' BSOD' : h.unexpectedShutdowns30d ? h.unexpectedShutdowns30d + ' crash' + (h.unexpectedShutdowns30d > 1 ? 'es' : '') : 'Stable'}</div><div class="s">${h.unexpectedShutdowns30d} unexpected shutdowns · ${h.bluescreens30d} blue screens · up ${h.uptimeHours}h</div></div>
+    </div>
+    <h2>Drives</h2><div class="grid g3">${disks.map(d => { const good = d.health === 'Healthy'; return `<div class="card">
+      <div class="row"><div class="n" style="font-weight:600">${esc(d.name)}</div><div class="spacer"></div>${tag(d.health || 'unknown', good ? 'ok' : 'bad')}</div>
+      <div class="m" style="margin:4px 0 12px">${esc(d.media)} · ${esc(d.bus)} · ${size(d.size)}</div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:8px" >
+        <div><div class="m">Temperature</div><div class="mono">${d.temp ? d.temp + '°C' : '–'}</div></div>
+        <div><div class="m">Wear used</div><div class="mono" style="color:${d.wear > 80 ? 'var(--bad)' : d.wear > 50 ? 'var(--warn)' : 'inherit'}">${d.wear != null ? d.wear + '%' : '–'}</div></div>
+        <div><div class="m">Powered on</div><div class="mono">${d.hours != null ? Math.round(d.hours).toLocaleString() + ' h' : '–'}</div></div>
+        <div><div class="m">Uncorrected errors</div><div class="mono" style="color:${(d.readErr || d.writeErr) ? 'var(--bad)' : 'inherit'}">${d.readErr != null ? (d.readErr || 0) + (d.writeErr || 0) : '–'}</div></div>
+      </div>${good ? '' : '<div class="note warn" style="margin-top:12px">Back up this drive now and plan to replace it.</div>'}</div>`; }).join('')}</div>
+    ${h.battery ? `<h2>Battery</h2><div class="card"><div class="row"><div><div class="big">${h.battery.health ?? '–'}%</div><div class="m">of original capacity · ${h.battery.charge}% charged now</div></div><div style="flex:1;max-width:340px"><div class="bar ${h.battery.health < 60 ? 'red' : h.battery.health < 80 ? 'hot' : ''}"><span style="width:${h.battery.health || 0}%"></span></div></div><div class="spacer"></div><button class="btn" onclick="sysAct('batteryreport',this)">Full battery report</button></div></div>` : ''}
+    <h2>System errors · last 7 days</h2><div class="card">${h.errors7d ? `<div class="m" style="margin-bottom:10px">${h.errors7d} errors logged. Most frequent sources:</div>${top.map(t => `<div class="row" style="margin-bottom:6px"><span class="mono" style="width:44px;color:var(--warn)">${t.count}×</span>${esc(t.source)}</div>`).join('')}<div class="m" style="margin-top:10px">A few errors a day is normal. One source repeating hundreds of times usually points at a specific driver or device.</div>` : '<div style="color:var(--ok)">✓ No system errors logged.</div>'}</div>`;
+  } catch (e) { $('#hw').innerHTML = `<div class="note warn">${esc(e.message)}</div>`; }
+};
+
+/* disk check */
+VIEWS.disk = async () => {
+  main.innerHTML = `<h1>Disk Check</h1><p class="sub">Checks each drive's file system for errors while Windows keeps running (the modern version of chkdsk). If it finds problems you can repair them on the spot, or at the next restart for the system drive.</p><div class="grid g3" id="dk">${loading('Reading drives…')}</div>`;
+  try {
+    const v = arr((await api('/api/volumes')).items);
+    $('#dk').innerHTML = v.map(x => { const pct = (x.size - x.free) / x.size * 100; return `<div class="card">
+      <div class="row"><div class="big" style="font-size:24px">${esc(x.letter)}:</div><div><div class="n" style="font-weight:600">${esc(x.label || 'Local Disk')}</div><div class="m">${esc(x.fs)} · ${tag(x.health || 'unknown', x.health === 'Healthy' ? 'ok' : 'bad')}</div></div></div>
+      <div class="bar ${pct > 90 ? 'red' : pct > 80 ? 'hot' : ''}" style="margin:14px 0 6px"><span style="width:${pct}%"></span></div><div class="m">${size(x.free)} free of ${size(x.size)}</div>
+      <div class="row" style="margin-top:14px"><button class="btn pri sm" onclick="vol('${x.letter}','scan',this)">Scan</button><button class="btn sm" onclick="vol('${x.letter}','spotfix',this)">Fix now</button><button class="btn sm" onclick="vol('${x.letter}','offline',this)">Fix at restart</button></div>
+      <div class="result" id="vr-${x.letter}"></div></div>`; }).join('');
+  } catch (e) { $('#dk').innerHTML = `<div class="note warn">${esc(e.message)}</div>`; }
+};
+async function vol(l, mode, btn) {
+  if (mode === 'offline' && !confirm(`Schedule a full repair of ${l}: at the next restart? Windows will take a few extra minutes to start.`)) return;
+  await run(btn, async () => { const r = await api('/api/volumes/action', { letter: l, mode }); $('#vr-' + l).textContent = r.message; log(`${l}: ${r.message}`, 'ok'); });
+}
+
+/* system */
+const ACTIONS = [
+  ['restorepoint', 'Create restore point', 'A snapshot of Windows settings so any change here can be rolled back.', 'pri'],
+  ['openrestore', 'Open System Restore', 'Roll Windows back to an earlier restore point.'],
+  ['optimize', 'Optimize drives', 'TRIM for SSDs, defragment for hard drives. Runs in its own window.'],
+  ['repair', 'Repair system files', 'DISM + SFC: finds and replaces damaged Windows files. 10–30 min.'],
+  ['winsxs', 'Clean component store', 'Removes old versions of Windows components left by updates.'],
+  ['explorer', 'Restart Explorer', 'Fixes a frozen taskbar, Start menu or desktop without rebooting.'],
+  ['iconcache', 'Rebuild icon cache', 'Fixes blank, wrong or generic-looking icons.'],
+  ['dns', 'Flush DNS', 'Fixes "site can\'t be reached" after a site moved servers.'],
+  ['netreset', 'Reset network stack', 'Last resort for broken internet. Needs a restart; VPN apps may need reinstalling.', 'danger'],
+  ['cleanmgr', 'Windows Disk Cleanup', 'Microsoft\'s own cleaner, including old Windows installs.'],
+  ['regbackup', 'Back up registry', 'Saves a copy of your user registry to Documents\\Tweakr23 backups.']
+];
+VIEWS.system = async () => {
+  main.innerHTML = `<h1>System Optimization</h1><p class="sub">Maintenance tools, the power plan, and a handful of tweaks that fix everyday Windows annoyances. Make a restore point first if you're about to change a lot.</p>
+  <h2>Power plan</h2><div class="card"><div class="row"><div><div class="m">Active plan</div><div class="big" style="font-size:20px" id="pwr">…</div></div><div class="spacer"></div>
+  <button class="btn" onclick="power('power-balanced',this)">Balanced</button><button class="btn" onclick="power('power-high',this)">High performance</button><button class="btn" onclick="power('power-ultimate',this)">Ultimate</button></div>
+  <div class="m" style="margin-top:10px">Balanced is right for laptops on battery. High performance or Ultimate keep the CPU ready for rendering, editing and games on desktops.</div></div>
+  <h2>Tools</h2><div class="grid g3">${ACTIONS.map(([id, t, d, k]) => `<div class="card act"><h3>${t}</h3><p>${d}</p><button class="btn ${k || ''} sm" onclick="sysAct('${id}',this)">Run</button></div>`).join('')}
+  <div class="card act" style="border-style:dashed"><h3>Registry defrag / cleaning</h3><p>Left out on purpose. Windows already compacts its registry on its own, and "cleaning" it gives no measurable speed-up while being the #1 way optimizer apps break PCs.</p><span class="tag t-dim">not needed</span></div></div>
+  <h2>Annoyance fixes</h2><div class="card" id="twk">${loading('Reading settings…')}</div>`;
+  try { const r = await api('/api/tweaks'); $('#pwr').textContent = r.power; drawToggles('#twk', arr(r.toggles)); } catch (e) { log(e.message, 'err'); }
+};
+async function power(id, btn) { await run(btn, async () => { const r = await api('/api/system', { id }); log(r.message, 'ok'); $('#pwr').textContent = (await api('/api/tweaks')).power; }); }
+async function sysAct(id, btn) {
+  if (id === 'netreset' && !confirm('Reset the network stack? You will need to restart Windows.')) return;
+  if (id === 'restorepoint') log('Creating restore point… (can take a minute)');
+  await run(btn, async () => { const r = await api('/api/system', { id }); log(r.message, 'ok'); });
+}
+async function openUrl(url) { try { await api('/api/open', { url }); } catch (e) { log(e.message, 'err'); } }
+
+/* ------------ shell ------------ */
+async function refreshRam() {
+  try { const d = await api('/api/mem'); const pct = (d.total - d.free) / d.total * 100; $('#hram').className = 'bar ' + (pct > 85 ? 'red' : pct > 70 ? 'hot' : ''); $('#hram span').style.width = pct + '%'; $('#hramt').textContent = Math.round(pct) + '% · ' + size(d.free) + ' free'; } catch {}
+}
+async function quit() { try { await api('/api/quit', {}); } catch {} document.body.innerHTML = '<div style="grid-column:1/3;grid-row:1/3;display:grid;place-items:center;color:#7d8aa0;font-family:Consolas">Tweakr23 stopped. You can close this window.</div>'; setTimeout(() => window.close(), 600); }
+setInterval(() => api('/api/ping').catch(() => {}), 20000);
+setInterval(refreshRam, 30000);
+refreshRam();
+go('dash');
+</script>
+</body>
+</html>
